@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HydroAI - AI-Powered Hydroponic Farm Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c5530;
+        }
+
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+
+        .email-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .email-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .cta-button {
+            padding: 15px 30px;
+            background: #2c5530;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: #1e3a22;
+            transform: translateY(-2px);
+        }
+
+        .benefits {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .benefit-card {
+            padding: 2rem;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2c5530;
+            margin-bottom: 1rem;
+        }
+
+        .problem-solution {
+            background: #f8f9fa;
+            padding: 80px 0;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .problem-card, .solution-card {
+            padding: 2rem;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .problem-card {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .solution-card {
+            border-left: 5px solid #27ae60;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .email-form {
+                flex-direction: column;
+            }
+            
+            .problem-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">🌱 HydroAI</div>
+            <div>
+                <button class="cta-button" onclick="scrollToSignup()">Get Early Access</button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Smart Farming, Smarter Yields</h1>
+            <p>AI-powered hydroponic farm management that increases yields by 25% while reducing manual work by 70%</p>
+            
+            <div class="cta-section" id="signup">
+                <h3 style="margin-bottom: 1rem;">Join 500+ Urban Farmers Getting Early Access</h3>
+                <form class="email-form" id="emailForm">
+                    <input type="email" class="email-input" placeholder="Enter your email address" required>
+                    <button type="submit" class="cta-button">Get Early Access</button>
+                </form>
+                <p style="font-size: 0.9rem; opacity: 0.8;">🚀 Be first to know when we launch • No spam, ever</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits">
+        <div class="container">
+            <h2 class="section-title">Why Urban Farmers Choose HydroAI</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🤖</div>
+                    <h3>AI-Powered Insights</h3>
+                    <p>Predictive analytics for optimal nutrient timing, disease prevention, and harvest planning</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📱</div>
+                    <h3>Real-Time Monitoring</h3>
+                    <p>24/7 sensor monitoring with instant alerts for pH, nutrients, temperature, and humidity</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📈</div>
+                    <h3>Increased Yields</h3>
+                    <p>Average 25% yield improvement through optimized growing conditions and timing</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">⏰</div>
+                    <h3>Save Time</h3>
+                    <p>Reduce manual monitoring from 4 hours to 30 minutes daily with automation</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <h3>Lower Costs</h3>
+                    <p>Reduce nutrient waste by 40% and prevent costly crop losses</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔧</div>
+                    <h3>Easy Integration</h3>
+                    <p>Works with existing hydroponic systems • Setup in under 1 hour</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="problem-solution">
+        <div class="container">
+            <h2 class="section-title">From Problem to Solution</h2>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <h3>❌ Current Challenges</h3>
+                    <ul style="margin-top: 1rem; line-height: 2;">
+                        <li>Manual monitoring takes 3-4 hours daily</li>
+                        <li>15-30% yield loss from late problem detection</li>
+                        <li>Inconsistent nutrient management</li>
+                        <li>No predictive insights for optimization</li>
+                        <li>Scaling operations is complex and costly</li>
+                    </ul>
+                </div>
+                <div class="solution-card">
+                    <h3>✅ HydroAI Solution</h3>
+                    <ul style="margin-top: 1rem; line-height: 2;">
+                        <li>Automated monitoring with AI insights</li>
+                        <li>Predictive alerts prevent problems before they start</li>
+                        <li>Precise nutrient recommendations</li>
+                        <li>Data-driven optimization suggestions</li>
+                        <li>Seamless scaling with cloud infrastructure</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero" style="padding: 60px 0;">
+        <div class="container">
+            <h2>Ready to Transform Your Farm?</h2>
+            <p>Join the waitlist and be among the first to experience AI-powered farming</p>
+            <button class="cta-button" style="margin-top: 1rem; padding: 20px 40px; font-size: 1.1rem;" onclick="scrollToSignup()">
+                Get Early Access Now
+            </button>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 HydroAI. All rights reserved. • Built for the future of farming</p>
+        </div>
+    </footer>
+
+    <script>
+        function scrollToSignup() {
+            document.getElementById('signup').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            
+            // Store email (in real implementation, send to backend)
+            localStorage.setItem('hydroai_email', email);
+            
+            // Show success message
+            const button = this.querySelector('button');
+            const originalText = button.textContent;
+            button.textContent = '✅ Added to Waitlist!';
+            button.style.background = '#27ae60';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '#2c5530';
+            }, 3000);
+            
+            // Clear form
+            this.querySelector('input[type="email"]').value = '';
+        });
+
+        // Add smooth scrolling for navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add scroll effect to header
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('.header');
+                if (window.scrollY > 100) {
+                    header.style.background = 'rgba(255, 255, 255, 0.98)';
+                } else {
+                    header.style.background = 'rgba(255, 255, 255, 0.95)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
