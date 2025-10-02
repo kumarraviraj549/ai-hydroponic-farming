@@ -1,9 +1,12 @@
 """SQLAlchemy models for HydroAI application."""
 
 from datetime import datetime, timezone
-from app import db
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+
+# Import db from the main app factory
+from flask import current_app
+db = SQLAlchemy()
 
 
 class User(db.Model):
