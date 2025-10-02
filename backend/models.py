@@ -1,9 +1,11 @@
 """SQLAlchemy models for HydroAI application."""
 
 from datetime import datetime, timezone
-from app import db
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+
+# Initialize db here to avoid circular imports
+db = SQLAlchemy()
 
 
 class User(db.Model):
@@ -18,8 +20,8 @@ class User(db.Model):
     company = db.Column(db.String(100))
     phone = db.Column(db.String(20))
     is_active = db.Column(db.Boolean, default=True, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     
     # Relationships
     farms = db.relationship('Farm', backref='owner', lazy=True, cascade='all, delete-orphan')
@@ -57,8 +59,8 @@ class Farm(db.Model):
     size_sqft = db.Column(db.Integer)  # Farm size in square feet
     farm_type = db.Column(db.String(50))  # hydroponic, vertical, greenhouse
     is_active = db.Column(db.Boolean, default=True, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     
     # Foreign keys
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -96,7 +98,7 @@ class Sensor(db.Model):
     min_threshold = db.Column(db.Float)
     max_threshold = db.Column(db.Float)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     
     # Foreign keys
     farm_id = db.Column(db.Integer, db.ForeignKey('farms.id'), nullable=False)
@@ -125,7 +127,7 @@ class SensorReading(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.Float, nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
+    timestamp = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False, index=True)
     
     # Foreign keys
     sensor_id = db.Column(db.Integer, db.ForeignKey('sensors.id'), nullable=False)
@@ -156,7 +158,7 @@ class Recommendation(db.Model):
     priority = db.Column(db.String(20), default='medium')  # low, medium, high, critical
     confidence_score = db.Column(db.Float)  # 0.0 to 1.0
     is_implemented = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     
     # Foreign keys
     farm_id = db.Column(db.Integer, db.ForeignKey('farms.id'), nullable=False)
@@ -188,7 +190,7 @@ class Alert(db.Model):
     severity = db.Column(db.String(20), default='medium')  # low, medium, high, critical
     is_read = db.Column(db.Boolean, default=False)
     is_resolved = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False, index=True)
     resolved_at = db.Column(db.DateTime)
     
     # Foreign keys

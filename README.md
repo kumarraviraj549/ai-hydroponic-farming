@@ -1,48 +1,49 @@
-# HydroAI - AI-Powered Hydroponic Farming SaaS Platform
+# 🌱 HydroAI - AI-Powered Hydroponic Farming SaaS Platform
 
-![HydroAI Logo](https://img.shields.io/badge/HydroAI-AI%20Powered%20Farming-green?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
-![Python](https://img.shields.io/badge/Python-3.11+-blue?style=for-the-badge&logo=python)
-![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
-![Status](https://img.shields.io/badge/Status-MVP%20Ready-green?style=for-the-badge)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Node.js 18+](https://img.shields.io/badge/node.js-18+-green.svg)](https://nodejs.org/)
+[![Docker](https://img.shields.io/badge/docker-supported-blue.svg)](https://www.docker.com/)
 
 HydroAI is a comprehensive SaaS platform that revolutionizes hydroponic and vertical farming operations through AI-powered insights, real-time sensor monitoring, and predictive analytics. Designed to maximize crop yields while minimizing manual intervention and operational costs.
 
-## 🚀 Live Demo
+## 🎯 Key Features
 
-**Demo Credentials:**
-- Email: `demo@hydroai.com`
-- Password: `demo123`
-
-## ✨ Key Features
-
-### 🌱 **Farm Management**
+### 🌱 Smart Farm Management
 - **Multi-Farm Dashboard** - Centralized management of multiple farming operations
 - **Real-time Monitoring** - Live sensor data from temperature, humidity, pH, and nutrient sensors
 - **Smart Alerts** - Intelligent notifications for critical conditions
 - **Growth Tracking** - Monitor plant health and growth rates
 
-### 🤖 **AI-Powered Insights**
+### 🤖 AI-Powered Intelligence
 - **Predictive Analytics** - AI recommendations for optimal nutrient dosing
 - **Yield Optimization** - Machine learning models to maximize crop production
 - **Resource Management** - Optimize water and nutrient usage
 - **Climate Control** - Automated environment adjustments
 
-### 📊 **Analytics & Reporting**
+### 📊 Advanced Analytics
 - **Performance Metrics** - Comprehensive farm performance analytics
 - **Historical Trends** - Track long-term patterns and improvements
 - **Cost Analysis** - Monitor operational costs and ROI
 - **Export Reports** - PDF and CSV export capabilities
 
-### 🔧 **System Features**
+### ⚡ Technical Excellence
 - **WebSocket Integration** - Real-time data updates
 - **Mobile Responsive** - Optimized for all devices
 - **Role-based Access** - Multi-user support with permissions
-- **API Documentation** - RESTful API for integrations
+- **RESTful API** - Complete API documentation
+
+## 🎥 Live Demo
+
+**Demo Credentials:**
+- **Email:** `demo@hydroai.com`
+- **Password:** `demo123`
+
+> 👁️ **Demo includes:** 3 farms, 12 sensors, 7 days of historical data, AI recommendations, and alerts
 
 ## 🛠️ Technology Stack
 
-### **Frontend**
+### Frontend
 - **Framework:** Next.js 14 with React 18
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
@@ -50,128 +51,108 @@ HydroAI is a comprehensive SaaS platform that revolutionizes hydroponic and vert
 - **State Management:** React Context + SWR
 - **Authentication:** JWT with secure cookies
 
-### **Backend**
+### Backend
 - **Framework:** Flask with SQLAlchemy
 - **Language:** Python 3.11+
-- **Database:** PostgreSQL / SQLite (dev)
+- **Database:** PostgreSQL / SQLite (development)
 - **Real-time:** WebSocket server
 - **Authentication:** JWT tokens
 - **ML/AI:** Custom prediction models
 
-### **Infrastructure**
-- **Deployment:** Docker containers
+### Infrastructure
+- **Containerization:** Docker & Docker Compose
 - **Caching:** Redis
 - **Monitoring:** Built-in health checks
 - **CI/CD:** GitHub Actions ready
 
-## 🚦 Quick Start
+## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.11+
-- Node.js 18+
-- PostgreSQL (or SQLite for development)
-- Redis (optional for caching)
+### Method 1: One-Command Setup (Recommended)
 
-### 1. Clone the Repository
 ```bash
+# Clone repository
 git clone https://github.com/kumarraviraj549/ai-hydroponic-farming.git
 cd ai-hydroponic-farming
+
+# Complete setup (installs dependencies, initializes database, seeds demo data)
+make setup
+
+# Start development servers
+make dev
 ```
 
-### 2. Backend Setup
+### Method 2: Docker Setup
+
 ```bash
-cd backend
+# Clone and start with Docker
+git clone https://github.com/kumarraviraj549/ai-hydroponic-farming.git
+cd ai-hydroponic-farming
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your configuration
-
-# Initialize database and seed demo data
-python seed_demo_data.py
-
-# Start the Flask API
-python app.py
+# Complete Docker setup
+make setup-docker
 ```
 
-### 3. Frontend Setup
-```bash
-cd frontend
+### Method 3: Manual Setup
 
-# Install dependencies
-npm install
+Detailed instructions available in [LOCAL_DEVELOPMENT.md](LOCAL_DEVELOPMENT.md)
 
-# Set up environment variables
-cp .env.local.example .env.local
-# Edit .env.local with your configuration
+## 📅 Access Points
 
-# Start the development server
-npm run dev
-```
-
-### 4. WebSocket Server (Optional)
-```bash
-cd backend
-
-# Start WebSocket server for real-time updates
-python websocket_server.py
-```
-
-### 5. Access the Application
-- **Frontend:** http://localhost:3000
+Once running:
+- **Frontend Application:** http://localhost:3000
 - **Backend API:** http://localhost:5000
-- **WebSocket:** ws://localhost:8765
-- **Demo Login:** demo@hydroai.com / demo123
+- **API Health Check:** http://localhost:5000/api/v1/health
+- **WebSocket Server:** ws://localhost:8765
+- **Database Admin** (Docker): http://localhost:8080
 
-## 📊 Demo Data
+## 📊 Business Impact
 
-The application includes comprehensive demo data:
+### Proven Results
+- **70% Reduction** in manual monitoring time
+- **25% Increase** in average crop yields  
+- **30% Lower** operational costs
+- **6-12 Months** ROI payback period
 
-- **3 Demo Farms** - Greenhouse, Vertical, and Hydroponic units
-- **12 Sensors** - Temperature, humidity, pH, and nutrient sensors
-- **7 Days of Data** - Historical sensor readings
-- **AI Recommendations** - Sample optimization suggestions
-- **Alert System** - Example notifications and warnings
+### Target Market
+- **Market Size:** $2.3B TAM (Global controlled environment agriculture)
+- **Growth Rate:** 24% CAGR
+- **Target Customers:** 2,500+ urban farm operations in North America
+- **Pricing:** $500-2,000/month SaaS subscriptions
 
-## 🔧 Configuration
+## 🔧 Development Commands
 
-### Backend Environment Variables
 ```bash
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/hydroai
+# Show all available commands
+make help
 
-# Security
-SECRET_KEY=your-secret-key
-JWT_SECRET_KEY=your-jwt-secret
+# Quick development
+make dev              # Start both frontend and backend
+make dev-backend      # Start only backend
+make dev-frontend     # Start only frontend
 
-# External Services
-MAIL_SERVER=smtp.gmail.com
-MAIL_USERNAME=your-email@gmail.com
-WEATHER_API_KEY=your-weather-api-key
+# Database management
+make init-db          # Initialize database
+make seed-db          # Add demo data
+make reset-db         # Reset database (deletes all data)
+make check-db         # Check database connection
 
-# Features
-DEMO_MODE=true
-DEBUG=false
+# Quality assurance
+make test             # Run all tests
+make lint             # Run all linting
+make fix-lint         # Fix linting issues
+
+# Docker operations
+make docker-up        # Start all services with Docker
+make docker-down      # Stop Docker services
+make docker-logs      # View logs
+
+# Utilities
+make clean            # Clean build artifacts
+make status           # Show environment status
+make info             # Show project info
 ```
 
-### Frontend Environment Variables
-```bash
-# API Configuration
-NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
-NEXT_PUBLIC_WS_URL=ws://localhost:8765
-
-# Features
-NEXT_PUBLIC_DEMO_MODE=true
-NEXT_PUBLIC_ENABLE_ANALYTICS=true
-```
-
-## 🔄 API Documentation
+## 📚 API Documentation
 
 ### Authentication
 ```bash
@@ -182,39 +163,37 @@ POST /api/v1/auth/login
   "password": "demo123"
 }
 
-# Get user profile
+# Get profile
 GET /api/v1/auth/me
 Authorization: Bearer <token>
 ```
 
-### Farms Management
+### Farm Management
 ```bash
 # Get all farms
 GET /api/v1/farms
 
-# Get farm details
+# Get farm details  
 GET /api/v1/farms/{farm_id}
 
-# Create new farm
+# Create farm
 POST /api/v1/farms
 {
   "name": "New Farm",
-  "description": "Farm description",
-  "location": "Farm location",
-  "size_sqft": 1000,
-  "farm_type": "greenhouse"
+  "location": "Farm Location",
+  "farm_type": "hydroponic"
 }
 ```
 
 ### Sensor Data
 ```bash
-# Get latest sensor readings
+# Get latest readings
 GET /api/v1/farms/{farm_id}/readings/latest
 
 # Get historical data
 GET /api/v1/farms/{farm_id}/readings?hours=24
 
-# Submit new reading
+# Submit reading
 POST /api/v1/sensors/{sensor_id}/readings
 {
   "value": 25.5,
@@ -222,75 +201,113 @@ POST /api/v1/sensors/{sensor_id}/readings
 }
 ```
 
-## 🌟 Business Impact
-
-### Proven Results
-- **70% Reduction** in manual monitoring time
-- **25% Increase** in average crop yields
-- **30% Lower** operational costs
-- **6-12 Months** ROI payback period
-
-### Target Market
-- **Market Size:** $2.3B TAM (Global controlled environment agriculture)
-- **Growth Rate:** 24% CAGR
-- **Target Customers:** 2,500+ urban farm operations in North America
-- **Pricing:** $500-2,000/month SaaS subscriptions
-
-## 🚀 Roadmap
+## 🔄 Project Roadmap
 
 ### ✅ Phase 1 - Foundation (Completed)
 - Market research and validation
-- Technical architecture
-- MVP development
-- Demo data and testing
+- Technical architecture design
+- MVP development and testing
+- Demo data and user experience
 
 ### ✅ Phase 2 - MVP Ready (Completed)
 - Complete dashboard implementation
 - Real-time WebSocket integration
 - Authentication and user management
-- Comprehensive demo data
+- Comprehensive demo experience
 
-### 📅 Phase 3 - AI Integration (Next)
-- Computer vision for plant health
+### 🚧 Phase 3 - AI Integration (Current)
+- Computer vision for plant health assessment
 - Advanced predictive models
-- Automated climate control
-- Third-party integrations
+- Automated climate control systems
+- Third-party sensor integrations
 
-### 📅 Phase 4 - Scale (Future)
-- Enterprise features
+### 📅 Phase 4 - Enterprise Scale (Future)
 - Multi-tenant architecture
-- Advanced analytics
-- API marketplace
+- Enterprise security features
+- Advanced analytics dashboard
+- API marketplace for integrations
+
+## 🐛 Issues Fixed in This Update
+
+✅ **Resolved Circular Import Issues**
+- Fixed `models.py` importing from `app.py`
+- Restructured imports for better modularity
+
+✅ **Database Timezone Improvements**
+- Replaced deprecated `datetime.utcnow()` with `datetime.now(timezone.utc)`
+- Added proper timezone handling
+
+✅ **Enhanced Error Handling**
+- Added comprehensive logging
+- Improved API error responses
+- Better validation and user feedback
+
+✅ **Development Experience**
+- Added database initialization script
+- Created comprehensive development guide
+- Added Makefile for easy commands
+- Improved Docker Compose configuration
+
+✅ **Code Quality**
+- Better code organization
+- Enhanced security measures
+- Improved documentation
+
+## 📝 Documentation
+
+- **[Local Development Guide](LOCAL_DEVELOPMENT.md)** - Complete setup instructions
+- **[Phase 1 Summary](PHASE1_SUMMARY.md)** - Project development overview
+- **[Security Policy](SECURITY.md)** - Security guidelines and reporting
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our Contributing Guide for details.
+We welcome contributions! Here's how to get started:
 
-### Development Setup
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Make your changes and test thoroughly
-4. Commit your changes: `git commit -m 'Add amazing feature'`
-5. Push to the branch: `git push origin feature/amazing-feature`
-6. Open a Pull Request
+1. **Fork the repository**
+2. **Create a feature branch:** `git checkout -b feature/amazing-feature`
+3. **Make your changes** and test thoroughly
+4. **Run quality checks:** `make lint && make test`
+5. **Commit changes:** `git commit -m 'Add amazing feature'`
+6. **Push to branch:** `git push origin feature/amazing-feature`
+7. **Open a Pull Request**
 
-## 📄 License
+### Development Guidelines
+- Follow existing code patterns
+- Add tests for new features
+- Update documentation as needed
+- Ensure all checks pass
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+## 🔒 Security
 
-## 🙋‍♂️ Support
+Security is a top priority. Please review our [Security Policy](SECURITY.md) and report any vulnerabilities responsibly.
+
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Support & Community
 
 - **Issues:** [GitHub Issues](https://github.com/kumarraviraj549/ai-hydroponic-farming/issues)
 - **Discussions:** [GitHub Discussions](https://github.com/kumarraviraj549/ai-hydroponic-farming/discussions)
+- **Email:** kumarraviraj549@gmail.com
 
 ## 🌟 Acknowledgments
 
 - Built with ❤️ for the future of sustainable agriculture
 - Inspired by the need for efficient food production systems
-- Thanks to the open-source community for amazing tools
+- Thanks to the open-source community for amazing tools and libraries
 
 ---
 
-**Made with 🌱 by [Kumar Ravi Raj](https://github.com/kumarraviraj549)**
+**Made with 🌱 by Kumar Ravi Raj**
 
 *Transforming agriculture through AI and technology*
+
+---
+
+### 💡 Quick Tips
+
+- **New to the project?** Start with `make setup && make dev`
+- **Need help?** Check `make help` for all available commands
+- **Having issues?** See [LOCAL_DEVELOPMENT.md](LOCAL_DEVELOPMENT.md) troubleshooting section
+- **Want to contribute?** Read the contributing guidelines above

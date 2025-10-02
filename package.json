@@ -1,24 +1,51 @@
 {
-  "name": "hydroai-saas",
+  "name": "hydroai-monorepo",
   "version": "1.0.0",
-  "description": "AI-powered hydroponic farming SaaS platform",
-  "main": "index.js",
+  "description": "AI-powered hydroponic farming SaaS platform - Monorepo",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && python app.py",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run build:frontend",
+    "start:frontend": "cd frontend && npm run start",
+    "start:backend": "cd backend && python app.py",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && pip install -r requirements.txt",
+    "init:db": "cd backend && python init_db.py",
+    "seed:db": "cd backend && python seed_demo_data.py",
+    "lint:frontend": "cd frontend && npm run lint",
+    "test:backend": "cd backend && python -m pytest",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "clean": "rm -rf node_modules frontend/node_modules frontend/.next backend/__pycache__ backend/**/__pycache__"
   },
-  "keywords": ["hydroponics", "AI", "farming", "SaaS", "agriculture"],
-  "author": "HydroAI Team",
+  "keywords": [
+    "hydroponics",
+    "AI",
+    "farming",
+    "SaaS",
+    "agriculture",
+    "vertical-farming",
+    "precision-agriculture"
+  ],
+  "author": "Kumar Ravi Raj <kumarraviraj549@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "next": "^14.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kumarraviraj549/ai-hydroponic-farming.git"
   },
   "devDependencies": {
-    "eslint": "^8.45.0",
-    "eslint-config-next": "^14.0.0"
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0",
+    "python": ">=3.11.0"
   }
 }
