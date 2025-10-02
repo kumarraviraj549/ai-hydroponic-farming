@@ -1,8 +1,7 @@
 {
   "name": "hydroai-frontend",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
-  "description": "HydroAI Frontend - AI-powered hydroponic farming dashboard",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,47 +10,31 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "next": "14.0.0",
+    "@heroicons/react": "^2.0.18",
+    "@types/node": "20.8.6",
+    "@types/react": "18.2.28",
+    "@types/react-dom": "18.2.13",
+    "autoprefixer": "10.4.16",
+    "axios": "^1.6.0",
+    "clsx": "^2.0.0",
+    "date-fns": "^2.30.0",
+    "eslint": "8.51.0",
+    "eslint-config-next": "13.5.4",
+    "next": "14.0.1",
+    "postcss": "8.4.31",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "@types/node": "20.8.0",
-    "@types/react": "18.2.25",
-    "@types/react-dom": "18.2.10",
-    "typescript": "5.2.2",
+    "recharts": "^2.8.0",
     "tailwindcss": "3.3.5",
-    "autoprefixer": "10.4.16",
-    "postcss": "8.4.31",
-    "@headlessui/react": "1.7.17",
-    "@heroicons/react": "2.0.18",
-    "axios": "1.5.1",
-    "swr": "2.2.4",
-    "react-hook-form": "7.47.0",
-    "@hookform/resolvers": "3.3.1",
-    "zod": "3.22.4",
-    "js-cookie": "3.0.5",
-    "@types/js-cookie": "3.0.4",
-    "recharts": "2.8.0",
-    "date-fns": "2.30.0",
-    "clsx": "2.0.0",
-    "lucide-react": "0.288.0"
+    "typescript": "5.2.2"
   },
   "devDependencies": {
-    "eslint": "8.51.0",
-    "eslint-config-next": "14.0.0",
-    "@typescript-eslint/eslint-plugin": "6.7.5",
-    "@typescript-eslint/parser": "6.7.5",
-    "prettier": "3.0.3",
-    "prettier-plugin-tailwindcss": "0.5.6"
+    "@types/date-fns": "^2.6.0",
+    "prettier": "^3.0.3",
+    "prettier-plugin-tailwindcss": "^0.5.6"
   },
-  "keywords": [
-    "hydroponics",
-    "agriculture",
-    "AI",
-    "farming",
-    "dashboard",
-    "IoT",
-    "sensors"
-  ],
-  "author": "HydroAI Team",
-  "license": "MIT"
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
 }
