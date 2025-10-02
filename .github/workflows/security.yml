@@ -1,0 +1,104 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run weekly security scan on Sundays at 2 AM UTC
+    - cron: '0 2 * * 0'
+
+jobs:
+  security:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        # Fetch full history for secret scanning
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install security tools
+      run: |
+        pip install bandit detect-secrets safety
+
+    - name: Run Bandit Security Linter
+      run: |
+        bandit -r backend/ -f json -o bandit-report.json || true
+        bandit -r backend/ || true
+
+    - name: Check for secrets
+      run: |
+        detect-secrets scan --all-files --baseline .secrets.baseline || true
+        echo "Checking for potential secrets..."
+        if detect-secrets scan --all-files --baseline .secrets.baseline; then
+          echo "✅ No new secrets detected"
+        else
+          echo "⚠️  Potential secrets found - please review"
+        fi
+
+    - name: Check Python dependencies for vulnerabilities
+      run: |
+        if [ -f backend/requirements.txt ]; then
+          safety check -r backend/requirements.txt || true
+        fi
+
+    - name: Scan for hardcoded passwords
+      run: |
+        echo "Scanning for hardcoded credentials..."
+        if grep -r -i "password.*=.*[^\s]" --include="*.py" --include="*.js" --include="*.ts" --exclude-dir=node_modules --exclude="*.example" . ; then
+          echo "❌ Potential hardcoded passwords found!"
+          exit 1
+        else
+          echo "✅ No hardcoded passwords detected"
+        fi
+
+    - name: Check for .env files
+      run: |
+        echo "Checking for committed .env files..."
+        if find . -name ".env" -not -path "./node_modules/*" | grep -q . ; then
+          echo "❌ .env files found in repository!"
+          find . -name ".env" -not -path "./node_modules/*"
+          exit 1
+        else
+          echo "✅ No .env files found"
+        fi
+
+    - name: Upload Bandit results to GitHub
+      if: always()
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: bandit-report.json
+      continue-on-error: true
+
+  dependency-check:
+    name: Dependency Security Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy results to GitHub Security
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
