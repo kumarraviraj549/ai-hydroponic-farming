@@ -4,8 +4,8 @@ from datetime import datetime, timezone
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# Import db from the main app factory
-from flask import current_app
+# Create the database instance
+# This will be initialized by the Flask app factory
 db = SQLAlchemy()
 
 
