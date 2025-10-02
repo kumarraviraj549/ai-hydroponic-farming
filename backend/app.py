@@ -6,6 +6,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -36,8 +40,12 @@ def create_app(config_name=None):
     # Enable CORS for frontend
     CORS(app, origins=[
         "http://localhost:3000",  # Next.js dev server
+        "http://127.0.0.1:3000",  # Alternative localhost
         "https://hydroai.com",    # Production domain
-    ])
+    ], supports_credentials=True)
+    
+    # Import models to ensure they are registered with SQLAlchemy
+    from models import User, Farm, Sensor, SensorReading, Recommendation, Alert
     
     # Register blueprints
     from routes.health import health_bp
@@ -56,7 +64,37 @@ def create_app(config_name=None):
     
     # Create tables
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+            print("Database tables created successfully")
+        except Exception as e:
+            print(f"Error creating database tables: {e}")
+    
+    # JWT error handlers
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_payload):
+        return {'message': 'Token has expired'}, 401
+    
+    @jwt.invalid_token_loader
+    def invalid_token_callback(error):
+        return {'message': 'Invalid token'}, 401
+    
+    @jwt.unauthorized_loader
+    def missing_token_callback(error):
+        return {'message': 'Token is required'}, 401
+    
+    # Error handlers
+    @app.errorhandler(404)
+    def not_found(error):
+        return {'message': 'Resource not found'}, 404
+    
+    @app.errorhandler(500)
+    def internal_error(error):
+        return {'message': 'Internal server error'}, 500
+    
+    @app.errorhandler(400)
+    def bad_request(error):
+        return {'message': 'Bad request'}, 400
     
     return app
 
