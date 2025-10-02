@@ -2,7 +2,6 @@
 
 import os
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -11,8 +10,10 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Initialize extensions
-db = SQLAlchemy()
+# Import the database instance from models
+from models import db
+
+# Initialize other extensions
 migrate = Migrate()
 jwt = JWTManager()
 
