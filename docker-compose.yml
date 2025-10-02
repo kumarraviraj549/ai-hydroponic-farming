@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: hydroai_postgres
+    environment:
+      POSTGRES_DB: hydroai
+      POSTGRES_USER: hydroai
+      POSTGRES_PASSWORD: hydroai_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hydroai -d hydroai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - hydroai_network
+
+  # Redis for caching
+  redis:
+    image: redis:7-alpine
+    container_name: hydroai_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - hydroai_network
+
+  # Backend Flask API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hydroai_backend
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://hydroai:hydroai_password@postgres:5432/hydroai
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=dev-secret-key-change-in-production
+      - JWT_SECRET_KEY=dev-jwt-secret-change-in-production
+      - DEMO_MODE=true
+    ports:
+      - "5000:5000"
+      - "8765:8765"  # WebSocket port
+    volumes:
+      - ./backend:/app
+      - backend_logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - hydroai_network
+    restart: unless-stopped
+
+  # Frontend Next.js
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hydroai_frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+      - NEXT_PUBLIC_WS_URL=ws://localhost:8765
+      - NEXT_PUBLIC_DEMO_MODE=true
+      - NODE_ENV=development
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    networks:
+      - hydroai_network
+    restart: unless-stopped
+
+  # Optional: pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: hydroai_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@hydroai.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - hydroai_network
+    profiles:
+      - admin
+
+# Named volumes for data persistence
+volumes:
+  postgres_data:
+    name: hydroai_postgres_data
+  redis_data:
+    name: hydroai_redis_data
+  backend_logs:
+    name: hydroai_backend_logs
+  pgadmin_data:
+    name: hydroai_pgadmin_data
+
+# Networks
+networks:
+  hydroai_network:
+    name: hydroai_network
+    driver: bridge
