@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hydroai-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=sqlite:///hydroai.db
+      - SECRET_KEY=hydroai-dev-secret-key
+      - JWT_SECRET_KEY=jwt-dev-secret-key
+      - CORS_ORIGINS=http://localhost:3000
+    volumes:
+      - ./backend:/app
+      - backend_data:/app/data
+    depends_on:
+      - redis
+    networks:
+      - hydroai-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hydroai-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+      - NEXT_PUBLIC_WS_URL=ws://localhost:8765
+      - NEXT_PUBLIC_DEMO_MODE=true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend
+    networks:
+      - hydroai-network
+
+  websocket:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hydroai-websocket
+    ports:
+      - "8765:8765"
+    environment:
+      - FLASK_ENV=development
+    volumes:
+      - ./backend:/app
+    command: python websocket_server.py
+    depends_on:
+      - backend
+    networks:
+      - hydroai-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: hydroai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - hydroai-network
+
+  # Optional: PostgreSQL for production-like testing
+  postgres:
+    image: postgres:15-alpine
+    container_name: hydroai-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=hydroai
+      - POSTGRES_USER=hydroai
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - hydroai-network
+    profiles:
+      - production
+
+volumes:
+  backend_data:
+  redis_data:
+  postgres_data:
+
+networks:
+  hydroai-network:
+    driver: bridge
