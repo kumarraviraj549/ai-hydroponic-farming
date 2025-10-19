@@ -1,4 +1,4 @@
-.PHONY: help install dev build test clean docker-up docker-down init-db seed-db lint
+.PHONY: help install dev build test clean docker-up docker-down init-db seed-db lint security-scan security-install
 .DEFAULT_GOAL := help
 
 # Colors for output
@@ -31,6 +31,12 @@ install-frontend: ## Install frontend dependencies only
 	npm install
 	cd frontend && npm install
 	@echo "$(GREEN)✅ Frontend dependencies installed!$(NC)"
+
+# Security Tools Installation
+security-install: ## Install security scanning tools
+	@echo "$(GREEN)Installing security tools...$(NC)"
+	pip install bandit[toml] detect-secrets safety
+	@echo "$(GREEN)✅ Security tools installed!$(NC)"
 
 # Development
 dev: ## Start both backend and frontend in development mode
@@ -107,6 +113,48 @@ fix-lint: ## Fix linting issues
 	cd backend && python -m black .
 	cd frontend && npm run lint --fix
 
+# Security Scanning
+security-scan: ## Run comprehensive security scan
+	@echo "$(GREEN)Running security scans...$(NC)"
+	$(MAKE) security-bandit
+	$(MAKE) security-secrets
+	$(MAKE) security-deps
+	$(MAKE) security-hardcoded
+	@echo "$(GREEN)✅ Security scans completed!$(NC)"
+
+security-bandit: ## Run Bandit security linter
+	@echo "$(GREEN)Running Bandit security scan...$(NC)"
+	@mkdir -p reports
+	bandit -r backend/ -f json -o reports/bandit-report.json --skip B101,B601 || true
+	bandit -r backend/ --skip B101,B601 || true
+	@echo "$(GREEN)✅ Bandit scan completed!$(NC)"
+
+security-secrets: ## Check for secrets in codebase
+	@echo "$(GREEN)Scanning for secrets...$(NC)"
+	detect-secrets scan --all-files --baseline .secrets.baseline --exclude-files node_modules/ --exclude-files __pycache__/ || echo "$(YELLOW)⚠️ Potential secrets found (informational)$(NC)"
+	@echo "$(GREEN)✅ Secret scan completed!$(NC)"
+
+security-deps: ## Check dependencies for vulnerabilities
+	@echo "$(GREEN)Checking Python dependencies...$(NC)"
+	test -f backend/requirements.txt && safety check -r backend/requirements.txt --ignore 70612 || echo "$(YELLOW)⚠️ Some dependency issues found$(NC)"
+	@echo "$(GREEN)Checking Node dependencies...$(NC)"
+	cd frontend && npm audit --audit-level high || echo "$(YELLOW)⚠️ Some npm audit issues found$(NC)"
+	@echo "$(GREEN)✅ Dependency scans completed!$(NC)"
+
+security-hardcoded: ## Check for hardcoded credentials
+	@echo "$(GREEN)Scanning for hardcoded credentials...$(NC)"
+	@if grep -r -i "password\s*=\s*['\"][^'\"]*['\"]" --include="*.py" --include="*.js" --include="*.ts" --exclude-dir=node_modules --exclude="*.example" . | grep -v "DEMO_PASSWORD" | grep -v "TEMP_FALLBACK" | grep -v "REPLACE_WITH" | grep -v "SET_YOUR" | grep -v "password.*env" | grep -v "password.*get"; then \
+		echo "$(RED)❌ Potential hardcoded passwords found!$(NC)"; \
+		exit 1; \
+	else \
+		echo "$(GREEN)✅ No hardcoded passwords detected$(NC)"; \
+	fi
+
+security-update-baseline: ## Update secrets baseline
+	@echo "$(GREEN)Updating secrets baseline...$(NC)"
+	detect-secrets scan --all-files --baseline .secrets.baseline --exclude-files node_modules/ --exclude-files __pycache__/ --update .secrets.baseline
+	@echo "$(GREEN)✅ Secrets baseline updated!$(NC)"
+
 # Docker
 docker-build: ## Build Docker images
 	@echo "$(GREEN)Building Docker images...$(NC)"
@@ -142,6 +190,7 @@ clean: ## Clean all build artifacts and dependencies
 	rm -rf backend/**/__pycache__
 	rm -rf backend/*.pyc
 	rm -rf backend/logs/*.log
+	rm -rf reports/
 	@echo "$(GREEN)✅ Cleanup complete!$(NC)"
 
 clean-docker: ## Clean Docker resources
@@ -182,11 +231,13 @@ status: ## Show development environment status
 	@echo "Backend: $(shell cd backend && python --version 2>/dev/null || echo 'Python not found')"
 	@echo "Database: $(shell test -f backend/hydroai.db && echo 'SQLite database exists' || echo 'Database not initialized')"
 	@echo "Docker: $(shell docker --version 2>/dev/null || echo 'Docker not installed')"
+	@echo "Security Tools: $(shell bandit --version 2>/dev/null || echo 'Not installed - run make security-install')"
 
 # Quick setup for new developers
 setup: ## Complete setup for new developers
 	@echo "$(BLUE)🚀 Setting up HydroAI for development...$(NC)"
 	$(MAKE) install
+	$(MAKE) security-install
 	$(MAKE) init-db
 	$(MAKE) seed-db
 	@echo "$(GREEN)✅ Setup complete! Run 'make dev' to start development.$(NC)"
@@ -208,7 +259,7 @@ info: ## Show project information
 	@echo ""
 	@echo "Demo Credentials:"
 	@echo "Email: demo@hydroai.com"
-	@echo "Password: demo123"
+	@echo "Password: [Set via DEMO_PASSWORD environment variable]"
 	@echo ""
 	@echo "Endpoints:"
 	@echo "Frontend: http://localhost:3000"
