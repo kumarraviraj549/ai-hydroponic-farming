@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    # Run weekly security scan on Sundays at 2 AM UTC
     - cron: '0 2 * * 0'
 
 jobs:
@@ -21,7 +20,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        # Fetch full history for secret scanning
         fetch-depth: 0
 
     - name: Set up Python
@@ -33,10 +31,10 @@ jobs:
       run: |
         pip install bandit[toml] detect-secrets safety
 
-    - name: Run Bandit Security Linter
+    - name: Run Bandit Security Linter (SARIF)
       run: |
         mkdir -p reports
-        bandit -r backend/ -f json -o reports/bandit-report.json --skip B101,B601 || true
+        bandit -r backend/ -f sarif -o reports/bandit.sarif --skip B101,B601 || true
         bandit -r backend/ --skip B101,B601 || true
 
     - name: Check for secrets
@@ -80,11 +78,11 @@ jobs:
           echo "✅ No .env files found"
         fi
 
-    - name: Upload Bandit results to GitHub
-      if: always() && hashFiles('reports/bandit-report.json') != ''
-      uses: github/codeql-action/upload-sarif@v2
+    - name: Upload Bandit SARIF to GitHub
+      if: always() && hashFiles('reports/bandit.sarif') != ''
+      uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: reports/bandit-report.json
+        sarif_file: reports/bandit.sarif
       continue-on-error: true
 
   dependency-check:
@@ -106,11 +104,11 @@ jobs:
         format: 'sarif'
         output: 'trivy-results.sarif'
         severity: 'CRITICAL,HIGH'
-        exit-code: '0'  # Don't fail on vulnerabilities, just report
+        exit-code: '0'
 
     - name: Upload Trivy results to GitHub Security
       if: always() && hashFiles('trivy-results.sarif') != ''
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: 'trivy-results.sarif'
       continue-on-error: true
