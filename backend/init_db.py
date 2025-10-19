@@ -27,13 +27,16 @@ def init_database(drop_existing=False):
             
             if demo_mode and not User.query.filter_by(email='demo@hydroai.com').first():
                 print("Creating demo user...")
+                # Get demo password from environment variable with fallback
+                demo_password = os.environ.get('DEMO_PASSWORD', 'change_me_in_production')
+                
                 demo_user = User(
                     email='demo@hydroai.com',
                     name='Demo User',
                     company='HydroAI Demo',
                     phone='+1-555-0123'
                 )
-                demo_user.set_password('demo123')
+                demo_user.set_password(demo_password)
                 db.session.add(demo_user)
                 db.session.commit()
                 
@@ -52,7 +55,7 @@ def init_database(drop_existing=False):
             if demo_mode:
                 print("\n🔑 Demo Credentials:")
                 print("   Email: demo@hydroai.com")
-                print("   Password: demo123")
+                print("   Password: [Set via DEMO_PASSWORD environment variable]")
                 
         except Exception as e:
             print(f"❌ Error initializing database: {e}")
