@@ -16,7 +16,7 @@ redis==5.0.1
 celery==5.3.4
 
 # HTTP and utilities
-requests==2.31.0
+requests==2.32.4
 python-dotenv==1.0.0
 
 # Data science and ML
