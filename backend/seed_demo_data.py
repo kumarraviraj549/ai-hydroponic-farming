@@ -25,13 +25,16 @@ def seed_demo_data():
         
         # Create demo user
         print("Creating demo user...")
+        # Get demo password from environment variable with fallback
+        demo_password = os.environ.get('DEMO_PASSWORD', 'change_me_in_production')
+        
         demo_user = User(
             email='demo@hydroai.com',
             name='Demo User',
             company='HydroAI Demo Farm',
             phone='+1-555-123-4567'
         )
-        demo_user.set_password('demo123')
+        demo_user.set_password(demo_password)
         db.session.add(demo_user)
         db.session.commit()
         
@@ -204,7 +207,7 @@ def seed_demo_data():
         
         print("\n✓ Demo data seeded successfully!")
         print(f"Created:")
-        print(f"  - 1 demo user (demo@hydroai.com / demo123)")
+        print(f"  - 1 demo user (demo@hydroai.com / [DEMO_PASSWORD env var])")
         print(f"  - {len(farms)} farms")
         print(f"  - {len(sensors)} sensors")
         print(f"  - {len(sensors) * 168} sensor readings (7 days)")
