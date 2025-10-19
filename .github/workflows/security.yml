@@ -45,8 +45,7 @@ jobs:
         if detect-secrets scan --all-files --baseline .secrets.baseline --exclude-files node_modules/ --exclude-files __pycache__/; then
           echo "✅ No new secrets detected"
         else
-          echo "⚠️  Potential secrets found - please review"
-          echo "This is informational and won't fail the build"
+          echo "⚠️  Potential secrets found - please review (informational)"
         fi
 
     - name: Check Python dependencies for vulnerabilities
@@ -56,15 +55,18 @@ jobs:
           safety check -r backend/requirements.txt --ignore 70612 || true
         fi
 
-    - name: Scan for hardcoded credentials (informational)
+    - name: Scan for hardcoded credentials (strict for literals)
       run: |
         echo "Scanning for hardcoded credentials..."
-        # Look for common password patterns but exclude demo/example patterns
-        if grep -r -i "password\s*=\s*['\"][^'\"]*['\"]" --include="*.py" --include="*.js" --include="*.ts" --exclude-dir=node_modules --exclude="*.example" . | grep -v "DEMO_PASSWORD" | grep -v "change_me" | grep -v "password.*env" | grep -v "password.*get"; then
-          echo "❌ Potential hardcoded passwords found!"
-          exit 1
+        MATCHES=$(grep -r -n -E "(password|passwd|pass|secret|token|api[_-]?key|access[_-]?key)\\s*[:=]\\s*['\"][^'\"]+['\"]" \
+          --include="*.py" --include="*.js" --include="*.ts" --include="*.json" \
+          --exclude-dir=node_modules --exclude-dir="__pycache__" --exclude="*.example" --exclude="*.spec.ts" --exclude="*.test.*" \
+          . | grep -viE "(TEMP_FALLBACK|REPLACE_WITH|SET_YOUR|ENV\\(|process\\.env|os\\.environ|getenv|DEMO_PASSWORD|password_hash|generate_password_hash|bcrypt|hashlib)" || true)
+        if [ -n "$MATCHES" ]; then
+          echo "$MATCHES"
+          echo "❌ Potential hardcoded credentials detected!" && exit 1
         else
-          echo "✅ No hardcoded passwords detected"
+          echo "✅ No hardcoded credentials detected"
         fi
 
     - name: Check for .env files
@@ -88,6 +90,9 @@ jobs:
   dependency-check:
     name: Dependency Security Check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     
     steps:
     - name: Checkout code
