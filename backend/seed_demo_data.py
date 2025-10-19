@@ -25,8 +25,12 @@ def seed_demo_data():
         
         # Create demo user
         print("Creating demo user...")
-        # Get demo password from environment variable with fallback
-        demo_password = os.environ.get('DEMO_PASSWORD', 'change_me_in_production')
+        # Get demo password from environment variable with secure fallback
+        demo_password = os.environ.get('DEMO_PASSWORD')
+        if not demo_password:
+            print("WARNING: DEMO_PASSWORD environment variable not set!")
+            print("Using temporary fallback. Set DEMO_PASSWORD in production.")
+            demo_password = 'TEMP_FALLBACK_SET_DEMO_PASSWORD_ENV_VAR'
         
         demo_user = User(
             email='demo@hydroai.com',
