@@ -67,6 +67,7 @@ def register_blueprints(app):
     from routes.recommendations import recommendations_bp
     from routes.alerts import alerts_bp
     from routes.auth import auth_bp
+    from routes.reports import reports_bp
     
     app.register_blueprint(health_bp, url_prefix='/api/v1')
     app.register_blueprint(farms_bp, url_prefix='/api/v1')
@@ -74,6 +75,7 @@ def register_blueprints(app):
     app.register_blueprint(recommendations_bp, url_prefix='/api/v1')
     app.register_blueprint(alerts_bp, url_prefix='/api/v1')
     app.register_blueprint(auth_bp, url_prefix='/api/v1')
+    app.register_blueprint(reports_bp)  # already has /api/v1 prefix in blueprint
 
 
 def setup_logging(app):
