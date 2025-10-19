@@ -23,12 +23,23 @@ Thumbs.db
 *.log
 logs/
 
-# Environment variables
+# Environment variables and secrets
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.csr
+
+# Configuration files that might contain secrets
+config.json
+secrets.json
+aws-config.json
+gcp-credentials.json
 
 # Build outputs
 dist/
@@ -38,8 +49,43 @@ build/
 # Database
 *.db
 *.sqlite3
+database.url
 
 # ML Models
 *.pkl
 *.joblib
 models/*.h5
+
+# Backup files
+*.bak
+*.backup
+*.tmp
+
+# Security scan reports
+bandit-report.json
+trivy-results.sarif
+security-report.*
+
+# Local development files
+local_settings.py
+dev_config.py
+
+# Docker secrets
+docker-compose.override.yml
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# pytest cache
+.pytest_cache/
+
+# mypy cache
+.mypy_cache/
